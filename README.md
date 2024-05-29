@@ -20,7 +20,7 @@ Third, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3005](http://localhost:3005) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
@@ -57,7 +57,7 @@ docker run \
   -v $(pwd)/.env:/app/.env \ # Use ENV variables and configuration from your file-system
   -v $(pwd)/config:/app/config \
   -v $(pwd)/cache:/app/cache \ # Use your file system to store gea vector database
-  -p 3000:3000 \
+  -p 3005:3005 \
   <your_app_image_name>
 ```
 

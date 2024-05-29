@@ -39,7 +39,7 @@
     "POETRY_VIRTUALENVS_CREATE": "false"
   },
   "forwardPorts": [
-    3000,
+    3005,
     8000
   ],
   "postCreateCommand": "npm install"
