@@ -10,7 +10,6 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3005
-      - MODEL=gpt-3.5-turbo
       - MODEL_PROVIDER=${MODEL_PROVIDER}
       - MODEL=${MODEL}
       - EMBEDDING_MODEL=${EMBEDDING_MODEL}
