@@ -1,0 +1,21 @@
+version: "2"
+services:
+  myservice:
+    restart: "no"
+
+    build: .
+
+    ports:
+      - 3000:3000/tcp
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MODEL=gpt-3.5-turbo
+      - MODEL_PROVIDER=${MODEL_PROVIDER}
+      - MODEL=${MODEL}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL}
+      - EMBEDDING_DIM=${EMBEDDING_DIM}
+      - TOP_K=${TOP_K}
+      - FILESERVER_URL_PREFIX=${FILESERVER_URL_PREFIX}
+      - SYSTEM_PROMPT=${SYSTEM_PROMPT}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
