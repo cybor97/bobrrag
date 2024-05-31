@@ -1,6 +1,7 @@
 import { initObservability } from "@/app/observability";
 import { Message, StreamData, StreamingTextResponse } from "ai";
-import { ChatMessage, MessageContent, Settings } from "llamaindex";
+import jwt from "jsonwebtoken";
+import { ChatMessage, MessageContent, OpenAIAgent, Settings } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
 import { initSettings } from "./engine/settings";
@@ -32,8 +33,40 @@ const convertMessageContent = (
   ];
 };
 
+// per-user chat engines
+const chatEngines = new Map<string, OpenAIAgent>();
+async function getChatEngine(userId?: string) {
+  if (userId) {
+    if (!chatEngines.has(userId)) {
+      const chatEngine = await createChatEngine();
+      chatEngines.set(userId, chatEngine);
+    }
+    return chatEngines.get(userId)!;
+  }
+  return createChatEngine();
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const token = request.headers.get("authorization");
+    try {
+      if (!token || !jwt.verify(token, process.env.JWT_SECRET!)) {
+        return NextResponse.json(
+          {
+            error: "missing or invalid authorization header",
+          },
+          { status: 401 },
+        );
+      }
+    } catch (e) {
+      return NextResponse.json(
+        {
+          error: "missing or invalid authorization header",
+        },
+        { status: 401 },
+      );
+    }
+
     const body = await request.json();
     const { messages, data }: { messages: Message[]; data: any } = body;
     const userMessage = messages.pop();
@@ -47,7 +80,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const chatEngine = await createChatEngine();
+    const chatEngine = await getChatEngine(data.userId);
 
     // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
     const userMessageContent = convertMessageContent(
